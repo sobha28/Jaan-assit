@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="JAN-ASSIST - Check your eligibility for 350+ central and state government schemes in just 2 minutes. Free, fast, and completely secure.">
+    <title>JAN-ASSIST | Government Support, Made Simple</title>
+    <link rel="icon" href="janass.png/image.png">
+    <link rel="icon" href="src/janass.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Mobile Responsive CSS -->
+    <link rel="stylesheet" href="responsive.css">
+
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM / TOKENS
+        ============================================================ */
+        :root {
+            --bg-primary: #050B1A;
+            --bg-secondary: #070E22;
+            --blue: #4F7CFF;
+            --purple: #8B5CF6;
+            --cyan: #00E5FF;
+            --pink: #EC4899;
+            --green: #10B981;
+            --orange: #F59E0B;
+            --text: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-hover: rgba(255, 255, 255, 0.09);
+            --glow-blue: 0 0 30px rgba(79, 124, 255, 0.4);
+            --glow-purple: 0 0 30px rgba(139, 92, 246, 0.4);
+            --glow-cyan: 0 0 30px rgba(0, 229, 255, 0.4);
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================================
+           BASE
+        ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--blue), var(--purple), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 3px;
+            background: var(--glass);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue), var(--purple), var(--cyan));
+            border-radius: 10px;
+            animation: load 1.8s ease forwards;
+        }
+
+        @keyframes load {
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.6
+            }
+        }
+
+        /* ============================================================
+           NEBULA / BACKGROUND
+        ============================================================ */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            animation: nebula-drift 12s ease-in-out infinite alternate;
+        }
+
+        .nebula-1 {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(79, 124, 255, 0.18) 0%, transparent 70%);
+            top: -200px;
+            left: -200px;
+        }
+
+        .nebula-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            top: 20%;
+            right: -150px;
+            animation-delay: -6s;
+        }
+
+        .nebula-3 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
+            bottom: 10%;
+            left: 20%;
+            animation-delay: -3s;
+        }
+
+        @keyframes nebula-drift {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(30px, 20px) scale(1.08);
+            }
+        }
+
+        /* ============================================================
+           NAVBAR
+        ============================================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 48px;
+            background: rgba(5, 11, 26, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(5, 11, 26, 0.92);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Logo */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: var(--glow-blue);
+        }
+
+        .nav-logo-text {
+            line-height: 1;
+        }
+
+        .nav-logo-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-logo-sub {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Center links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text);
+            background: var(--glass);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--blue);
+        }
+
+        /* Right controls */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .lang-select {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .lang-select:hover {
+            border-color: var(--blue);
+        }
+
+        .lang-select option {
+            background: #0D1630;
+        }
+
+        .btn-get-started {
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-get-started:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6);
+            color: white;
+        }
+
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+
+        /* ============================================================
+           HERO
+        ============================================================ */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 20px 80px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* Parliament silhouette left */
+        .parliament-silhouette {
+            position: absolute;
+            bottom: 0;
+            left: -60px;
+            width: 420px;
+            height: 320px;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ashoka Chakra right */
+        .ashoka-chakra {
+            position: absolute;
+            top: 50%;
+            right: -100px;
+            transform: translateY(-50%);
+            width: 420px;
+            height: 420px;
+            opacity: 0.07;
+            pointer-events: none;
+            z-index: 0;
+            animation: rotate-slow 60s linear infinite;
+        }
+
+        @keyframes rotate-slow {
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        /* Light streaks */
+        .light-streak {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, rgba(79, 124, 255, 0.5), transparent);
+            pointer-events: none;
+            animation: streak-fall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes streak-fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh);
+                opacity: 0;
+            }
+        }
+
+        .hero-glass {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            padding: 70px 60px 60px;
+            text-align: center;
+            box-shadow:
+                0 32px 80px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        /* Badge */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(79, 124, 255, 0.12);
+            border: 1px solid rgba(79, 124, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 32px;
+            animation: badge-pulse 3s ease-in-out infinite;
+        }
+
+        .hero-badge .star {
+            color: #FFD700;
+        }
+
+        @keyframes badge-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(79, 124, 255, 0);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(79, 124, 255, 0.3);
+            }
+        }
+
+        /* Heading */
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 22px;
+            letter-spacing: -1px;
+        }
+
+        .hero-title .white-text {
+            color: #FFFFFF;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Subtitle */
+        .hero-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Search bar */
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            max-width: 560px;
+            margin: 0 auto 56px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--purple);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.25);
+        }
+
+        .search-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.55);
+            transform: translateY(-1px);
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px 24px;
+            min-width: 160px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--blue);
+            transform: translateY(-3px);
+        }
+
+        .stat-icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon-blue {
+            background: rgba(79, 124, 255, 0.2);
+            color: var(--blue);
+            box-shadow: 0 0 20px rgba(79, 124, 255, 0.3);
+        }
+
+        .stat-icon-purple {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .stat-icon-cyan {
+            background: rgba(0, 229, 255, 0.15);
+            color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+        }
+
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        /* ============================================================
+           CATEGORY SECTION
+        ============================================================ */
+        .category-section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--purple);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 14px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Category grid — 2 columns of horizontal cards */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 22px 26px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .category-card:hover {
+            background: var(--glass-hover);
+            transform: translateY(-5px);
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Unique glow borders per category */
+        .cat-edu:hover {
+            border-color: rgba(79, 124, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(79, 124, 255, 0.2);
+        }
+
+        .cat-agri:hover {
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 8px 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .cat-women:hover {
+            border-color: rgba(236, 72, 153, 0.6);
+            box-shadow: 0 8px 40px rgba(236, 72, 153, 0.2);
+        }
+
+        .cat-senior:hover {
+            border-color: rgba(245, 158, 11, 0.6);
+            box-shadow: 0 8px 40px rgba(245, 158, 11, 0.2);
+        }
+
+        .cat-health:hover {
+            border-color: rgba(0, 229, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(0, 229, 255, 0.2);
+        }
+
+        .cat-house:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 8px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .cat-child:hover {
+            border-color: rgba(251, 191, 36, 0.6);
+            box-shadow: 0 8px 40px rgba(251, 191, 36, 0.2);
+        }
+
+        .cat-emp:hover {
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 8px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .cat-icon-wrap {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .category-card:hover .cat-icon-wrap {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        /* Icon colors */
+        .icon-blue {
+            background: rgba(79, 124, 255, 0.15);
+            color: var(--blue);
+        }
+
+        .icon-green {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--green);
+        }
+
+        .icon-pink {
+            background: rgba(236, 72, 153, 0.15);
+            color: var(--pink);
+        }
+
+        .icon-orange {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--orange);
+        }
+
+        .icon-cyan {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--cyan);
+        }
+
+        .icon-purple {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--purple);
+        }
+
+        .icon-yellow {
+            background: rgba(251, 191, 36, 0.15);
+            color: #FBbf24;
+        }
+
+        .icon-indigo {
+            background: rgba(99, 102, 241, 0.15);
+            color: #6366F1;
+        }
+
+        .cat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cat-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .cat-count {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .cat-arrow {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .category-card:hover .cat-arrow {
+            color: var(--blue);
+            transform: translateX(4px);
+        }
+
+        /* ============================================================
+           FOOTER CTA
+        ============================================================ */
+        .cta-section {
+            position: relative;
+            z-index: 1;
+            padding: 80px 20px 120px;
+            text-align: center;
+        }
+
+        .cta-glass {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(79, 124, 255, 0.08), rgba(139, 92, 246, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: var(--radius-xl);
+            padding: 60px 40px;
+        }
+
+        .cta-glass h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .cta-glass p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+            text-decoration: none;
+            padding: 14px 36px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.45);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 45px rgba(139, 92, 246, 0.65);
+            color: white;
+        }
+
+        /* ============================================================
+           FOOTER BAR
+        ============================================================ */
+        .footer-bar {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--glass-border);
+            padding: 24px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        /* ============================================================
+           SCROLL TOP
+        ============================================================ */
+        #scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 900;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            box-shadow: var(--glow-purple);
+        }
+
+        #scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #scroll-top:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 14px 24px;
+            }
+
+            .nav-links {
+                position: static;
+                transform: none;
+                display: none;
+            }
+
+            .hero-glass {
+                padding: 50px 30px 44px;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-glass {
+                padding: 40px 20px 36px;
+            }
+
+            .stats-row {
+                gap: 14px;
+            }
+
+            .stat-card {
+                min-width: 130px;
+                padding: 14px 18px;
+            }
+
+            .footer-bar {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== LOADING SCREEN ===== -->
+    <div id="loading-screen">
+        <div class="loader-logo">JAN-ASSIST</div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- ===== NEBULA BACKGROUNDS ===== -->
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div id="particles-js"></div>
+
+    <!-- ===== LIGHT STREAKS ===== -->
+    <div id="streaks-container"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="mainNavbar">
+        <a href="index.html" class="nav-logo" id="homeLink">
+            <div class="nav-logo-icon">🏛️</div>
+            <div class="nav-logo-text">
+                <div class="nav-logo-name">JAN-ASSIST</div>
+                <div class="nav-logo-sub">Government Support, Made Simple</div>
+            </div>
+        </a>
+
+        <div class="nav-links" id="navLinksMenu">
+            <a href="index.html" class="active" id="navHome" data-i18n="navHome">Home</a>
+            <a href="about.html" id="navAbout" data-i18n="navAbout">About</a>
+            <a href="eligibility.html" id="navEligibility" data-i18n="navEligibility">Check Eligibility</a>
+            <a href="schemes.html" id="navSchemes" data-i18n="navSchemes">Schemes</a>
+        </div>
+
+        <div class="nav-controls">
+            <select class="lang-select" id="languageSwitcher">
+                <option value="en">🌐 English</option>
+                <option value="ta">தமிழ்</option>
+                <option value="hi">हिन्दी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="te">తెలుగు</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+            <a href="eligibility.html" class="btn-get-started" id="getStartedBtn" data-i18n="getStarted">Get Started</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero-section" id="home">
+
+        <!-- Decorative SVG: Parliament silhouette -->
+        <svg class="parliament-silhouette" viewBox="0 0 400 300" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <rect x="170" y="20" width="60" height="10" rx="2" />
+            <polygon points="200,10 180,30 220,30" />
+            <rect x="155" y="30" width="90" height="15" rx="2" />
+            <rect x="130" y="45" width="140" height="20" rx="2" />
+            <rect x="60" y="65" width="280" height="15" rx="2" />
+            <rect x="40" y="80" width="320" height="10" rx="2" />
+            <rect x="50" y="90" width="40" height="120" />
+            <rect x="100" y="100" width="30" height="110" />
+            <rect x="140" y="90" width="120" height="120" />
+            <rect x="270" y="100" width="30" height="110" />
+            <rect x="310" y="90" width="40" height="120" />
+            <rect x="30" y="210" width="340" height="10" rx="2" />
+            <rect x="0" y="220" width="400" height="80" />
+        </svg>
+
+        <!-- Ashoka Chakra SVG -->
+        <svg class="ashoka-chakra" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="95" stroke="#4F7CFF" stroke-width="3" />
+            <circle cx="100" cy="100" r="10" fill="#4F7CFF" />
+            <g stroke="#4F7CFF" stroke-width="1.5">
+                <line x1="100" y1="10" x2="100" y2="190" />
+                <line x1="10" y1="100" x2="190" y2="100" />
+                <line x1="29" y1="29" x2="171" y2="171" />
+                <line x1="171" y1="29" x2="29" y2="171" />
+                <line x1="18" y1="63" x2="182" y2="137" />
+                <line x1="182" y1="63" x2="18" y2="137" />
+                <line x1="63" y1="18" x2="137" y2="182" />
+                <line x1="137" y1="18" x2="63" y2="182" />
+                <line x1="8" y1="84" x2="192" y2="116" />
+                <line x1="192" y1="84" x2="8" y2="116" />
+                <line x1="84" y1="8" x2="116" y2="192" />
+                <line x1="116" y1="8" x2="84" y2="192" />
+            </g>
+        </svg>
+
+        <div class="hero-glass" data-aos="fade-up" data-aos-duration="900">
+
+            <!-- Badge -->
+            <div class="hero-badge" id="badgeText" data-i18n="badge">
+                <span class="star">⭐</span>
+                Trusted by 12 Lakh+ Citizens
+            </div>
+
+            <!-- Heading -->
+            <h1 class="hero-title" id="mainTitle" data-i18n="title">
+                <span class="white-text">Government Support,</span><br>
+                <span class="gradient-text">Made Simple</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="hero-subtitle" id="subText" data-i18n="sub">
+                Check your eligibility for 350+ central &amp; state government schemes in just 2 minutes.
+                Free, fast, and completely secure.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="search-wrapper">
+                <input type="text" id="searchInput"
+                    placeholder="Search schemes (e.g., PM Kisan, Scholarship, Housing...)">
+                <button class="search-btn" id="searchBtn" onclick="handleSearch()" data-i18n="search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Search
+                </button>
+            </div>
+
+            <!-- Statistics Row -->
+            <div class="stats-row">
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="stat-icon-wrap stat-icon-blue">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" data-count="350" data-suffix="+">0</div>
+                        <div class="stat-label" id="stat1" data-i18n="stat1">Schemes Available</div>
+                    </div>
+                </div>
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="stat-icon-wrap stat-icon-purple">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" data-count="12" data-suffix="L+">0</div>
+                        <div class="stat-label" id="stat2" data-i18n="stat2">Citizens Helped</div>
+                    </div>
+                </div>
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="stat-icon-wrap stat-icon-cyan">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" data-count="28" data-suffix="">0</div>
+                        <div class="stat-label" id="stat3" data-i18n="stat3">States Covered</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== CATEGORY SECTION ===== -->
+    <section class="category-section" id="schemes">
+        <div class="section-header" data-aos="fade-up">
+            <div class="section-tag"><i class="fa-solid fa-grid-2"></i> Categories</div>
+            <h2 class="section-title" id="categoryTitle" data-i18n="categoryTitle">Browse by Category</h2>
+            <p class="section-subtitle" id="categorySub" data-i18n="categorySub">
+                Find schemes tailored to your needs across various government departments
+            </p>
+        </div>
+
+        <div class="category-grid">
+
+            <a href="eligibility.html?cat=Education" class="category-card cat-edu" data-aos="fade-up"
+                data-aos-delay="50">
+                <div class="cat-icon-wrap icon-blue"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat1" data-i18n="cat1">Education</div>
+                    <div class="cat-count" data-i18n="cat1_desc">45 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Agriculture" class="category-card cat-agri" data-aos="fade-up"
+                data-aos-delay="100">
+                <div class="cat-icon-wrap icon-green"><i class="fa-solid fa-seedling"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat2" data-i18n="cat2">Agriculture</div>
+                    <div class="cat-count" data-i18n="cat2_desc">38 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Women" class="category-card cat-women" data-aos="fade-up"
+                data-aos-delay="150">
+                <div class="cat-icon-wrap icon-pink"><i class="fa-solid fa-heart"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat3" data-i18n="cat3">Women Empowerment</div>
+                    <div class="cat-count" data-i18n="cat3_desc">32 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Senior" class="category-card cat-senior" data-aos="fade-up"
+                data-aos-delay="200">
+                <div class="cat-icon-wrap icon-orange"><i class="fa-solid fa-users"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat4" data-i18n="cat4">Senior Citizens</div>
+                    <div class="cat-count" data-i18n="cat4_desc">22 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Healthcare" class="category-card cat-health" data-aos="fade-up"
+                data-aos-delay="250">
+                <div class="cat-icon-wrap icon-cyan"><i class="fa-solid fa-cross"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat5" data-i18n="cat5">Healthcare</div>
+                    <div class="cat-count" data-i18n="cat5_desc">41 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Housing" class="category-card cat-house" data-aos="fade-up"
+                data-aos-delay="300">
+                <div class="cat-icon-wrap icon-purple"><i class="fa-solid fa-house"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat6" data-i18n="cat6">Housing</div>
+                    <div class="cat-count" data-i18n="cat6_desc">18 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Child" class="category-card cat-child" data-aos="fade-up"
+                data-aos-delay="350">
+                <div class="cat-icon-wrap icon-yellow"><i class="fa-solid fa-child-reaching"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat7" data-i18n="cat7">Child Welfare</div>
+                    <div class="cat-count" data-i18n="cat7_desc">28 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+            <a href="eligibility.html?cat=Employment" class="category-card cat-emp" data-aos="fade-up"
+                data-aos-delay="400">
+                <div class="cat-icon-wrap icon-indigo"><i class="fa-solid fa-briefcase"></i></div>
+                <div class="cat-info">
+                    <div class="cat-name" id="cat8" data-i18n="cat8">Employment</div>
+                    <div class="cat-count" data-i18n="cat8_desc">35 schemes</div>
+                </div>
+                <i class="fa-solid fa-arrow-right cat-arrow"></i>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ===== CTA SECTION ===== -->
+    <section class="cta-section" data-aos="fade-up">
+        <div class="cta-glass">
+            <h2>Ready to Find Your Benefits?</h2>
+            <p>Check your eligibility in under 2 minutes and discover all the government schemes you qualify for —
+                completely free.</p>
+            <a href="eligibility.html" class="btn-cta">
+                <i class="fa-solid fa-rocket"></i>
+                Check Eligibility Now
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-bar">
+        <div>© 2026 JAN-ASSIST · Government Support, Made Simple</div>
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="eligibility.html">Check Eligibility</a>
+            <a href="schemes.html">Schemes</a>
+        </div>
+    </footer>
+
+    <!-- ===== SCROLL TO TOP ===== -->
+    <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+
+    <!-- ===== SCRIPTS ===== -->
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <script>
+        /* ============================================================
+           LOADING SCREEN
+        ============================================================ */
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+            }, 2000);
+        });
+
+        /* ============================================================
+           AOS INIT
+        ============================================================ */
+        AOS.init({ once: true, duration: 750, offset: 60 });
+
+        /* ============================================================
+           PARTICLES.JS
+        ============================================================ */
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 70, density: { enable: true, value_area: 900 } },
+                color: { value: ['#4F7CFF', '#8B5CF6', '#00E5FF'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.35, random: true, anim: { enable: true, speed: 0.8, opacity_min: 0.1 } },
+                size: { value: 2.5, random: true, anim: { enable: true, speed: 2, size_min: 0.5 } },
+                line_linked: { enable: true, distance: 130, color: '#4F7CFF', opacity: 0.12, width: 1 },
+                move: { enable: true, speed: 0.8, direction: 'none', random: true, out_mode: 'out' }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                modes: { grab: { distance: 140, line_linked: { opacity: 0.4 } }, push: { particles_nb: 3 } }
+            },
+            retina_detect: true
+        });
+
+        /* ============================================================
+           LIGHT STREAKS
+        ============================================================ */
+        (function createStreaks() {
+            const container = document.getElementById('streaks-container');
+            for (let i = 0; i < 12; i++) {
+                const streak = document.createElement('div');
+                streak.classList.add('light-streak');
+                const left = Math.random() * 100;
+                const height = 60 + Math.random() * 140;
+                const delay = Math.random() * 12;
+                const dur = 6 + Math.random() * 8;
+                streak.style.cssText = `
+            left: ${left}%;
+            height: ${height}px;
+            animation-duration: ${dur}s;
+            animation-delay: ${delay}s;
+            position: fixed;
+            top: 0;
+            z-index: 0;
+            pointer-events: none;
+        `;
+                container.appendChild(streak);
+            }
+        })();
+
+        /* ============================================================
+           NAVBAR SCROLL
+        ============================================================ */
+        const navbar = document.getElementById('mainNavbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+            document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 300);
+        });
+
+        /* ============================================================
+           ANIMATED COUNTERS
+        ============================================================ */
+        function animateCounters() {
+            document.querySelectorAll('.stat-number').forEach(el => {
+                const target = parseInt(el.dataset.count);
+                const suffix = el.dataset.suffix || '';
+                let current = 0;
+                const step = Math.ceil(target / 60);
+                const timer = setInterval(() => {
+                    current = Math.min(current + step, target);
+                    el.textContent = current + suffix;
+                    if (current >= target) clearInterval(timer);
+                }, 25);
+            });
+        }
+
+        // Trigger counter when hero is visible
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { animateCounters(); heroObserver.disconnect(); } });
+        }, { threshold: 0.3 });
+        const heroGlass = document.querySelector('.hero-glass');
+        if (heroGlass) heroObserver.observe(heroGlass);
+
+        /* ============================================================
+           GSAP HERO ENTRANCE
+        ============================================================ */
+        gsap.timeline({ delay: 2.1 })
+            .from('.hero-badge', { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' })
+            .from('.hero-title', { opacity: 0, y: 40, duration: 0.7, ease: 'power3.out' }, '-=0.3')
+            .from('.hero-subtitle', { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' }, '-=0.3')
+            .from('.search-wrapper', { opacity: 0, y: 25, duration: 0.5, ease: 'power3.out' }, '-=0.2')
+            .from('.stat-card', { opacity: 0, y: 20, stagger: 0.12, duration: 0.5, ease: 'power3.out' }, '-=0.2');
+
+        /* ============================================================
+           MOUSE PARALLAX
+        ============================================================ */
+        document.addEventListener('mousemove', (e) => {
+            const xRatio = (e.clientX / window.innerWidth - 0.5) * 2;
+            const yRatio = (e.clientY / window.innerHeight - 0.5) * 2;
+            gsap.to('.parliament-silhouette', { x: xRatio * -20, y: yRatio * -15, duration: 1.5, ease: 'power1.out' });
+            gsap.to('.ashoka-chakra', { x: xRatio * 15, y: yRatio * 10, duration: 1.5, ease: 'power1.out' });
+            gsap.to('.nebula-1', { x: xRatio * -12, y: yRatio * -8, duration: 2.5, ease: 'power1.out' });
+            gsap.to('.nebula-2', { x: xRatio * 10, y: yRatio * 6, duration: 2.5, ease: 'power1.out' });
+        });
+
+        /* ============================================================
+           SEARCH
+        ============================================================ */
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) window.location.href = `schemes.html?search=${encodeURIComponent(query)}`;
+        }
+        document.getElementById('searchInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') handleSearch();
+        });
+
+        /* ============================================================
+           DARK MODE TOGGLE (decorative — page is already dark)
+        ============================================================ */
+        function toggleDarkMode() {
+            const btn = document.getElementById('darkModeToggle');
+            const icon = btn.querySelector('i');
+            const label = btn.querySelector('span');
+            if (icon.classList.contains('fa-moon')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                label.textContent = 'Light';
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                label.textContent = 'Dark';
+            }
+        }
+    </script>
+    <script src="lang.js"></script>
+
+</body>
+
+</html>

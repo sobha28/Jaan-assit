@@ -1,0 +1,11 @@
+com\localgov\eligibilitychecker\dto\EligibilityResponse.class
+com\localgov\eligibilitychecker\controller\EligibilityController.class
+com\localgov\eligibilitychecker\controller\SchemeController.class
+com\localgov\eligibilitychecker\dto\EligibilityRequest.class
+com\localgov\eligibilitychecker\repository\SchemeRepository.class
+com\localgov\eligibilitychecker\service\SchemeService.class
+com\localgov\eligibilitychecker\repository\UserRepository.class
+com\localgov\eligibilitychecker\EligibilityCheckerApplication.class
+com\localgov\eligibilitychecker\model\Scheme.class
+com\localgov\eligibilitychecker\service\EligibilityService.class
+com\localgov\eligibilitychecker\model\User.class

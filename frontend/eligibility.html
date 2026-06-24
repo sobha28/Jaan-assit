@@ -1,0 +1,2241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check Eligibility — JAN-ASSIST</title>
+    <link rel="icon" href="janass.png/image.png">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <!-- AOS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        /* ═══════════════════════════════════════
+       ROOT & RESET
+    ═══════════════════════════════════════ */
+        :root {
+            --bg-primary: #040815;
+            --bg-secondary: #070d1f;
+            --bg-card: rgba(8, 15, 40, 0.7);
+            --blue: #1a6cff;
+            --blue-light: #4d8fff;
+            --cyan: #00d4ff;
+            --cyan-dim: rgba(0, 212, 255, 0.15);
+            --purple: #7c3aed;
+            --purple-light: #a855f7;
+            --purple-dim: rgba(124, 58, 237, 0.15);
+            --pink: #e040fb;
+            --text-primary: #e8f0ff;
+            --text-muted: #6b82b0;
+            --text-dim: #3a4d72;
+            --border: rgba(0, 212, 255, 0.12);
+            --border-hover: rgba(0, 212, 255, 0.35);
+            --grad-primary: linear-gradient(135deg, #1a6cff 0%, #7c3aed 50%, #00d4ff 100%);
+            --grad-subtle: linear-gradient(135deg, rgba(26, 108, 255, 0.08), rgba(124, 58, 237, 0.08), rgba(0, 212, 255, 0.08));
+            --glass: rgba(8, 15, 40, 0.65);
+            --glass-border: rgba(0, 212, 255, 0.14);
+            --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-hover: 0 0 60px rgba(0, 212, 255, 0.18), 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Ambient grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Radial ambient glow */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -30%;
+            left: -20%;
+            width: 80vw;
+            height: 80vh;
+            background: radial-gradient(ellipse, rgba(124, 58, 237, 0.07) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ═══════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════ */
+        /* ===========================
+   JAN-ASSIST NAVBAR
+=========================== */
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 48px;
+            background: rgba(5, 11, 26, .75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, .12);
+            transition: all .35s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(5, 11, 26, .92);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, .5);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #4F7CFF, #8B5CF6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 0 30px rgba(79, 124, 255, .4);
+        }
+
+        .nav-logo-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #00E5FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .nav-logo-sub {
+            font-size: .62rem;
+            color: rgba(255, 255, 255, .6);
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, .6);
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: .3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, .05);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lang-select {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: white;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: .8rem;
+            cursor: pointer;
+        }
+
+        .lang-select option {
+            background: #0D1630;
+        }
+
+        .btn-get-started {
+            background: linear-gradient(135deg, #4F7CFF, #8B5CF6);
+            color: white;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 10px;
+            font-size: .875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: .3s;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, .4);
+        }
+
+        .btn-get-started:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* ═══════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════ */
+        .hero {
+            position: relative;
+            z-index: 1;
+            padding-top: 140px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(ellipse, rgba(26, 108, 255, 0.12) 0%, rgba(0, 212, 255, 0.06) 40%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .hero-eyebrow::before,
+        .hero-eyebrow::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--cyan);
+            opacity: 0.5;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 40%, var(--purple-light) 80%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin: 0 auto 3.5rem;
+            max-width: 420px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+        }
+
+        .step-dot {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            color: var(--text-dim);
+            background: var(--bg-secondary);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step.active .step-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--cyan-dim);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .step.completed .step-dot {
+            border-color: var(--purple);
+            color: var(--bg-primary);
+            background: var(--purple);
+        }
+
+        .step-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .step.active .step-label {
+            color: var(--cyan);
+        }
+
+        .step.completed .step-label {
+            color: var(--purple-light);
+        }
+
+        .step-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            min-width: 60px;
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .step-line.completed {
+            background: var(--purple);
+        }
+
+        /* ═══════════════════════════════════════
+       FORM SECTION
+    ═══════════════════════════════════════ */
+        .form-section {
+            position: relative;
+            z-index: 1;
+            padding-bottom: 4rem;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-glow);
+            transition: box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(0, 212, 255, 0.22);
+        }
+
+        .form-card {
+            padding: 2.5rem 2rem;
+        }
+
+        .form-section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .form-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(4, 8, 21, 0.7) !important;
+            border: 1px solid rgba(0, 212, 255, 0.14) !important;
+            border-radius: 8px !important;
+            color: var(--text-primary) !important;
+            font-size: 0.88rem;
+            padding: 0.65rem 1rem;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+            outline: none !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--cyan) !important;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1) !important;
+            background: rgba(0, 212, 255, 0.04) !important;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-dim) !important;
+        }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: rgba(240, 80, 120, 0.6) !important;
+            box-shadow: 0 0 0 3px rgba(240, 80, 120, 0.08) !important;
+        }
+
+        .form-control.is-valid,
+        .form-select.is-valid {
+            border-color: rgba(0, 220, 140, 0.5) !important;
+            box-shadow: 0 0 0 3px rgba(0, 220, 140, 0.08) !important;
+        }
+
+        .invalid-feedback {
+            font-size: 0.72rem;
+            color: #ff6b8a;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-select option {
+            background: #0b1230;
+            color: var(--text-primary);
+        }
+
+        /* Input with icon */
+        .input-group-text {
+            background: rgba(0, 212, 255, 0.06) !important;
+            border: 1px solid rgba(0, 212, 255, 0.14) !important;
+            border-right: none !important;
+            color: var(--cyan) !important;
+            font-size: 0.8rem;
+        }
+
+        .input-group .form-control {
+            border-left: none !important;
+        }
+
+        .input-group .form-control:focus {
+            border-left: none !important;
+        }
+
+        /* Range slider */
+        .form-range::-webkit-slider-track {
+            background: rgba(0, 212, 255, 0.15);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background: var(--cyan);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            border: none;
+        }
+
+        /* Income display */
+        .income-display {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: var(--cyan);
+            text-align: center;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        .income-display span {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Custom radio / checkbox chips */
+        .option-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .option-chip input {
+            display: none;
+        }
+
+        .option-chip label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.9rem;
+            border: 1px solid rgba(0, 212, 255, 0.18);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(4, 8, 21, 0.6);
+        }
+
+        .option-chip input:checked+label {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--cyan-dim);
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+        }
+
+        .option-chip label:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            color: var(--text-primary);
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--cyan) 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            padding: 0.9rem 2.5rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 4px 24px rgba(26, 108, 255, 0.35);
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(26, 108, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.25);
+        }
+
+        .btn-submit:hover::before {
+            opacity: 1;
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ═══════════════════════════════════════
+       LOADING OVERLAY
+    ═══════════════════════════════════════ */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 8, 21, 0.92);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(8px);
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader-ring {
+            width: 70px;
+            height: 70px;
+            border: 2px solid var(--border);
+            border-top-color: var(--cyan);
+            border-right-color: var(--purple-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loader-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--cyan);
+            text-transform: uppercase;
+        }
+
+        .loader-bar {
+            width: 220px;
+            height: 2px;
+            background: var(--border);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .loader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            border-radius: 1px;
+            transition: width 0.1s;
+        }
+
+        /* ═══════════════════════════════════════
+       RESULTS SECTION
+    ═══════════════════════════════════════ */
+        .results-section {
+            position: relative;
+            z-index: 1;
+            padding: 4rem 0;
+            display: none;
+        }
+
+        .results-section.visible {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .results-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 800;
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-meta {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Stats bar */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .stat-pill {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.6rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .stat-pill .stat-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        .stat-pill .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Search bar */
+        .search-bar-wrap {
+            max-width: 480px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-bar-wrap i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cyan);
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        .search-bar-wrap input {
+            padding-left: 2.5rem !important;
+        }
+
+        /* Scheme card */
+        .scheme-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1.6rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            height: 100%;
+        }
+
+        .scheme-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--grad-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .scheme-card:hover::before {
+            opacity: 1;
+        }
+
+        .scheme-ministry {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--purple-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .scheme-name {
+            font-size: 0.98rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            line-height: 1.4;
+        }
+
+        .scheme-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            line-height: 1.55;
+        }
+
+        /* Eligibility bar */
+        .elig-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.35rem;
+        }
+
+        .elig-label span:first-child {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .elig-pct {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .elig-pct.high {
+            color: #00dc8c;
+        }
+
+        .elig-pct.mid {
+            color: var(--cyan);
+        }
+
+        .elig-pct.low {
+            color: var(--purple-light);
+        }
+
+        .elig-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+        }
+
+        .elig-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .elig-bar-fill.high {
+            background: linear-gradient(90deg, #00dc8c, #00ff99);
+        }
+
+        .elig-bar-fill.mid {
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+        }
+
+        .elig-bar-fill.low {
+            background: linear-gradient(90deg, var(--purple), var(--purple-light));
+        }
+
+        /* Tags */
+        .scheme-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .tag {
+            font-size: 0.62rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            border: 1px solid;
+            letter-spacing: 0.08em;
+        }
+
+        .tag-cyan {
+            color: var(--cyan);
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.06);
+        }
+
+        .tag-purple {
+            color: var(--purple-light);
+            border-color: rgba(124, 58, 237, 0.3);
+            background: rgba(124, 58, 237, 0.06);
+        }
+
+        .tag-pink {
+            color: var(--pink);
+            border-color: rgba(224, 64, 251, 0.3);
+            background: rgba(224, 64, 251, 0.06);
+        }
+
+        .tag-green {
+            color: #00dc8c;
+            border-color: rgba(0, 220, 140, 0.3);
+            background: rgba(0, 220, 140, 0.06);
+        }
+
+        /* Scheme card actions */
+        .scheme-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .btn-scheme-primary {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(26, 108, 255, 0.2), rgba(0, 212, 255, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--cyan);
+            border-radius: 7px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.06em;
+        }
+
+        .btn-scheme-primary:hover {
+            background: rgba(0, 212, 255, 0.18);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.2);
+            color: var(--cyan);
+        }
+
+        .btn-scheme-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 7px;
+            font-size: 0.74rem;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            text-decoration: none;
+        }
+
+        .btn-scheme-secondary:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* Scheme badge */
+        .scheme-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.18rem 0.55rem;
+            border-radius: 20px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .badge-high {
+            background: rgba(0, 220, 140, 0.12);
+            border: 1px solid rgba(0, 220, 140, 0.3);
+            color: #00dc8c;
+        }
+
+        .badge-mid {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            color: var(--cyan);
+        }
+
+        /* ═══════════════════════════════════════
+       NO RESULTS STATE
+    ═══════════════════════════════════════ */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        /* ═══════════════════════════════════════
+       SUCCESS ANIMATION
+    ═══════════════════════════════════════ */
+        .success-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 220, 140, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .success-ring::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 220, 140, 0.15);
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+        .footer-bar {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--glass-border);
+            padding: 24px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        /* ═══════════════════════════════════════
+       SCROLL TO TOP
+    ═══════════════════════════════════════ */
+        #scrollTop {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 42px;
+            height: 42px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        #scrollTop.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #scrollTop:hover {
+            background: var(--cyan-dim);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.25);
+        }
+
+        /* ═══════════════════════════════════════
+       TOAST NOTIFICATION
+    ═══════════════════════════════════════ */
+        .toast-stack {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9998;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        .toast-item {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.35s ease;
+            white-space: nowrap;
+        }
+
+        .toast-item.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .hero {
+                padding: 3.5rem 0 2rem;
+            }
+
+            .step-line {
+                min-width: 30px;
+            }
+
+            .stats-row {
+                gap: 1rem;
+            }
+
+            .stat-pill {
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .step-label {
+                display: none;
+            }
+        }
+
+        /* ═══════════════════════════════════════
+       MISC UTILITIES
+    ═══════════════════════════════════════ */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-cyan {
+            color: var(--cyan);
+        }
+
+        .text-purple {
+            color: var(--purple-light);
+        }
+
+        .text-grad {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-aos] {
+            will-change: opacity, transform;
+        }
+
+        /* Icon avatar on scheme cards */
+        .scheme-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .icon-blue {
+            background: rgba(26, 108, 255, 0.15);
+            color: var(--blue-light);
+            border: 1px solid rgba(26, 108, 255, 0.25);
+        }
+
+        .icon-cyan {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .icon-purple {
+            background: rgba(124, 58, 237, 0.12);
+            color: var(--purple-light);
+            border: 1px solid rgba(124, 58, 237, 0.22);
+        }
+
+        .icon-green {
+            background: rgba(0, 220, 140, 0.1);
+            color: #00dc8c;
+            border: 1px solid rgba(0, 220, 140, 0.2);
+        }
+
+        .icon-pink {
+            background: rgba(224, 64, 251, 0.1);
+            color: var(--pink);
+            border: 1px solid rgba(224, 64, 251, 0.2);
+        }
+    </style>
+    <!-- Mobile Responsive CSS -->
+    <link rel="stylesheet" href="responsive.css">
+</head>
+
+<body>
+
+    <!-- ════════════════════════════ LOADING OVERLAY ════════════════════════════ -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader-ring"></div>
+        <div class="loader-bar">
+            <div class="loader-bar-fill" id="loaderBarFill"></div>
+        </div>
+        <div class="loader-text" id="loaderText">Initialising scan…</div>
+    </div>
+
+    <!-- ════════════════════════════ NAVBAR ════════════════════════════ -->
+    <nav class="navbar" id="mainNavbar">
+        <a href="index.html" class="nav-logo">
+            <div class="nav-logo-icon">🏛️</div>
+            <div>
+                <div class="nav-logo-name">JAN-ASSIST</div>
+                <div class="nav-logo-sub">Government Support, Made Simple</div>
+            </div>
+        </a>
+
+        <div class="nav-links" id="navLinksMenu">
+            <a href="index.html" id="navHome" data-i18n="navHome">Home</a>
+            <a href="about.html" id="navAbout" data-i18n="navAbout">About</a>
+            <a href="eligibility.html" class="active" id="navEligibility" data-i18n="navEligibility">Check Eligibility</a>
+            <a href="schemes.html" id="navSchemes" data-i18n="navSchemes">Schemes</a>
+        </div>
+
+        <div class="nav-controls">
+            <select class="lang-select" id="languageSwitcher">
+                <option value="en">🌐 English</option>
+                <option value="ta">தமிழ்</option>
+                <option value="hi">हिन्दी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="te">తెలుగు</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+
+            <a href="eligibility.html" class="btn-get-started" id="getStartedBtn" data-i18n="getStarted">
+                Get Started
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ════════════════════════════ HERO ════════════════════════════ -->
+    <section class="hero">
+        <div class="container" data-aos="fade-up" data-aos-duration="700">
+            <div class="hero-eyebrow" data-i18n="eligEyebrow">
+                <i class="fa-solid fa-circle-dot fa-beat-fade" style="color:var(--cyan);font-size:0.55rem;"></i>
+                Citizen Services Portal
+            </div>
+            <h1 class="hero-title" data-i18n="eligTitle">Check Your Eligibility</h1>
+            <p class="hero-sub" data-i18n="eligSub">
+                Answer a few questions and our system will match you with every government welfare scheme you qualify
+                for — instantly.
+            </p>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator" data-aos="fade-up" data-aos-delay="150">
+                <div class="step active" id="step1">
+                    <div class="step-dot">01</div>
+                    <div class="step-label" data-i18n="eligStep1">Profile</div>
+                </div>
+                <div class="step-line" id="line1"></div>
+                <div class="step active" id="step2">
+                    <div class="step-dot">02</div>
+                    <div class="step-label" data-i18n="eligStep2">Details</div>
+                </div>
+                <div class="step-line" id="line2"></div>
+                <div class="step" id="step3">
+                    <div class="step-dot">03</div>
+                    <div class="step-label" data-i18n="eligStep3">Results</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════ FORM ════════════════════════════ -->
+    <section class="form-section" id="formSection">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 col-xl-8">
+                    <div class="glass-card form-card" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
+
+                        <!-- Section A: Personal Profile -->
+                        <div class="form-section-title" data-i18n="eligSecA">
+                            <i class="fa-solid fa-user-circle text-cyan"></i>
+                            Personal Profile
+                        </div>
+
+                        <form id="eligibilityForm" novalidate>
+                            <div class="row g-3 mb-4">
+
+                                <!-- Full Name -->
+                                <div class="col-md-6">
+                                    <label class="form-label" data-i18n="eligName">Full Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                        <input type="text" class="form-control" id="name" placeholder="e.g. Gugan"
+                                            required minlength="3" data-i18n="eligNamePlaceholder" />
+                                        <div class="invalid-feedback" data-i18n="eligNameInvalid">Please enter your full name (min 3 characters)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Age -->
+                                <div class="col-md-3 col-6">
+                                    <label class="form-label" data-i18n="eligAge">Age</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-calendar"></i></span>
+                                        <input type="number" class="form-control" id="age" placeholder="18–100" min="1"
+                                            max="120" required data-i18n="eligAgePlaceholder" />
+                                        <div class="invalid-feedback" data-i18n="eligAgeInvalid">Enter valid age (1–120)</div>
+                                    </div>
+                                </div>
+
+                                <!-- Gender -->
+                                <div class="col-md-3 col-6">
+                                    <label class="form-label" data-i18n="eligGender">Gender</label>
+                                    <select class="form-select" id="gender" required>
+                                        <option value="" disabled selected data-i18n="eligGenderSelect">Select</option>
+                                        <option value="male" data-i18n="eligGenderMale">Male</option>
+                                        <option value="female" data-i18n="eligGenderFemale">Female</option>
+                                        <option value="other" data-i18n="eligGenderOther">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback" data-i18n="eligGenderInvalid">Please select gender</div>
+                                </div>
+
+                                <!-- State -->
+                                <div class="col-md-6">
+                                    <label class="form-label" data-i18n="eligState">State / UT</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                                        <select class="form-select" id="state" required>
+                                            <option value="" disabled selected data-i18n="eligStateSelect">Select your state</option>
+                                            <option>Andhra Pradesh</option>
+                                            <option>Arunachal Pradesh</option>
+                                            <option>Assam</option>
+                                            <option>Bihar</option>
+                                            <option>Chhattisgarh</option>
+                                            <option>Goa</option>
+                                            <option>Gujarat</option>
+                                            <option>Haryana</option>
+                                            <option>Himachal Pradesh</option>
+                                            <option>Jharkhand</option>
+                                            <option>Karnataka</option>
+                                            <option>Kerala</option>
+                                            <option>Madhya Pradesh</option>
+                                            <option>Maharashtra</option>
+                                            <option>Manipur</option>
+                                            <option>Meghalaya</option>
+                                            <option>Mizoram</option>
+                                            <option>Nagaland</option>
+                                            <option>Odisha</option>
+                                            <option>Punjab</option>
+                                            <option>Rajasthan</option>
+                                            <option>Sikkim</option>
+                                            <option>Tamil Nadu</option>
+                                            <option>Telangana</option>
+                                            <option>Tripura</option>
+                                            <option>Uttar Pradesh</option>
+                                            <option>Uttarakhand</option>
+                                            <option>West Bengal</option>
+                                            <option>Delhi</option>
+                                            <option>Jammu & Kashmir</option>
+                                            <option>Ladakh</option>
+                                        </select>
+                                        <div class="invalid-feedback" data-i18n="eligStateInvalid">Please select your state</div>
+                                    </div>
+                                </div>
+
+                                <!-- Occupation -->
+                                <div class="col-md-6">
+                                    <label class="form-label" data-i18n="eligOccupation">Occupation</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa-solid fa-briefcase"></i></span>
+                                        <select class="form-select" id="occupation" required>
+                                            <option value="" disabled selected data-i18n="eligOccSelect">Select occupation</option>
+                                            <option value="farmer" data-i18n="eligOccFarmer">Farmer / Agricultural Worker</option>
+                                            <option value="self-employed" data-i18n="eligOccSenior">Senior Citizen</option>
+                                            <option value="student" data-i18n="eligOccStudent">Student</option>
+                                            <option value="unemployed" data-i18n="eligOccUnemployed">Unemployed</option>
+                                            <option value="homemaker" data-i18n="eligOccHomemaker">Homemaker</option>
+                                            <option value="retired" data-i18n="eligOccRetired">Retired</option>
+                                        </select>
+                                        <div class="invalid-feedback" data-i18n="eligOccInvalid">Please select your occupation</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section B: Economic Details -->
+                            <div class="form-section-title" data-i18n="eligSecB">
+                                <i class="fa-solid fa-chart-line text-cyan"></i>
+                                Economic &amp; Social Details
+                            </div>
+
+                            <div class="row g-3 mb-4">
+
+                                <!-- Annual Income -->
+                                <div class="col-12">
+                                    <label class="form-label" data-i18n="eligIncome">Annual Household Income</label>
+                                    <input type="range" class="form-range" id="incomeRange" min="0" max="1500000"
+                                        step="10000" value="200000" />
+                                    <div class="income-display" id="incomeDisplay">
+                                        ₹ 2,00,000
+                                        <span data-i18n="eligIncomeSub">Annual Household Income</span>
+                                    </div>
+                                </div>
+
+                                <!-- Category -->
+                                <div class="col-md-6">
+                                    <label class="form-label" data-i18n="eligCategory">Social Category</label>
+                                    <select class="form-select" id="category" required>
+                                        <option value="" disabled selected data-i18n="eligCatSelect">Select category</option>
+                                        <option value="general" data-i18n="eligCatGeneral">General</option>
+                                        <option value="obc" data-i18n="eligCatObc">OBC (Other Backward Class)</option>
+                                        <option value="sc" data-i18n="eligCatSc">SC (Scheduled Caste)</option>
+                                        <option value="st" data-i18n="eligCatSt">ST (Scheduled Tribe)</option>
+                                        <option value="ews" data-i18n="eligCatEws">EWS (Economically Weaker Section)</option>
+                                        <option value="minority" data-i18n="eligCatMinority">Minority Community</option>
+                                    </select>
+                                    <div class="invalid-feedback" data-i18n="eligCatInvalid">Please select your category</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label" data-i18n="eligContact">Contact Number</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fa-solid fa-phone"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="contactNumber"
+                                            placeholder="Enter mobile number" required data-i18n="eligContactPlaceholder">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Submit -->
+                            <div
+                                class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-2">
+                                <p class="text-muted mb-0" style="font-size:0.72rem;" data-i18n="eligDataLoc"><i
+                                        class="fa-solid fa-lock me-1 text-cyan"></i>Your data is processed locally
+                                    and
+                                    never stored.</p>
+                                <button type="submit" class="btn-submit" id="submitBtn" data-i18n="eligScanBtn">
+                                    <i class="fa-solid fa-magnifying-glass me-2"></i>
+                                    Scan Eligibility
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider" id="resultsDivider" style="display:none;"></div>
+
+    <!-- ════════════════════════════ RESULTS ════════════════════════════ -->
+    <section class="results-section" id="resultsSection">
+        <div class="container">
+            <div class="results-header" data-aos="fade-up">
+                <div class="success-ring">
+                    <i class="fa-solid fa-check" style="font-size:1.5rem;color:#00dc8c;"></i>
+                </div>
+                <div class="results-title" id="resultsTitle">Eligibility Results</div>
+                <div class="results-meta" id="resultsMeta">Loading…</div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="stats-row" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-pill">
+                    <i class="fa-solid fa-list-check text-cyan"></i>
+                    <div>
+                        <div class="stat-num" id="statMatched">0</div>
+                        <div class="stat-label">Schemes Matched</div>
+                    </div>
+                </div>
+                <div class="stat-pill">
+                    <i class="fa-solid fa-star text-cyan"></i>
+                    <div>
+                        <div class="stat-num" id="statTopScore">0%</div>
+                        <div class="stat-label">Top Match</div>
+                    </div>
+                </div>
+                <div class="stat-pill">
+                    <i class="fa-solid fa-indian-rupee-sign text-cyan"></i>
+                    <div>
+                        <div class="stat-num" id="statBenefit">₹0</div>
+                        <div class="stat-label">Potential Benefit</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-bar-wrap" data-aos="fade-up" data-aos-delay="150">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="form-control" id="schemeSearch"
+                    placeholder="Filter schemes by name or ministry…" oninput="filterSchemes()" />
+            </div>
+
+            <!-- Scheme Grid -->
+            <div class="row g-4" id="schemeGrid" data-aos="fade-up" data-aos-delay="200"></div>
+
+            <!-- No results state -->
+            <div class="no-results d-none" id="noResults">
+                <div class="no-results-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+                <p style="color:var(--text-muted);">No schemes match your search. Try different keywords.</p>
+            </div>
+
+            <!-- Re-check -->
+            <div class="text-center mt-5" data-aos="fade-up">
+                <button class="btn-submit" onclick="resetForm()"
+                    style="background: linear-gradient(135deg, rgba(26,108,255,0.2),rgba(124,58,237,0.2)); border:1px solid rgba(0,212,255,0.3); color:var(--cyan); box-shadow:none;">
+                    <i class="fa-solid fa-rotate-left me-2"></i>
+                    Re-check with New Profile
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════ FOOTER ════════════════════════════ -->
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-bar">
+        <div>© 2026 JAN-ASSIST · Government Support, Made Simple</div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="schemes.html">Schemes</a>
+        </div>
+    </footer>
+
+    <div id="toastStack" class="toast-stack"></div>
+    <div id="scrollTop"><i class="fa-solid fa-chevron-up"></i></div>
+
+    <!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        // ═══════════════════════════════════════
+        //  AOS INIT
+        // ═══════════════════════════════════════
+        AOS.init({ once: true, duration: 650, easing: 'ease-out-cubic', offset: 60 });
+
+        // ═══════════════════════════════════════
+        //  GSAP: Navbar scroll effect
+        // ═══════════════════════════════════════
+        gsap.registerPlugin(ScrollTrigger);
+
+        ScrollTrigger.create({
+            start: 'top -60px',
+            onUpdate: (self) => {
+                document.getElementById('mainNavbar').classList.toggle('scrolled', self.progress > 0);
+            }
+        });
+
+        // ═══════════════════════════════════════
+        //  GSAP: Hero entrance
+        // ═══════════════════════════════════════
+        gsap.from('.hero-eyebrow', { opacity: 0, y: 20, duration: 0.7, ease: 'power3.out' });
+        gsap.from('.hero-title', { opacity: 0, y: 30, duration: 0.7, delay: 0.15, ease: 'power3.out' });
+        gsap.from('.hero-sub', { opacity: 0, y: 20, duration: 0.6, delay: 0.3, ease: 'power3.out' });
+        gsap.from('.step-indicator', { opacity: 0, y: 15, duration: 0.6, delay: 0.45, ease: 'power3.out' });
+
+        // ═══════════════════════════════════════
+        //  SCROLL-TO-TOP
+        // ═══════════════════════════════════════
+        const scrollTopButton = document.getElementById('scrollTop');
+        if (scrollTopButton) {
+            window.addEventListener('scroll', () => {
+                scrollTopButton.classList.toggle('visible', window.scrollY > 400);
+            });
+            scrollTopButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  INCOME RANGE SLIDER
+        // ═══════════════════════════════════════
+        const incomeRange = document.getElementById('incomeRange');
+        const incomeDisplay = document.getElementById('incomeDisplay');
+
+        function formatIncome(val) {
+            if (val >= 100000) return '\u20b9 ' + (val / 100000).toFixed(1) + ' Lakh';
+            if (val >= 1000) return '\u20b9 ' + (val / 1000).toFixed(0) + ',000';
+            return '\u20b9 ' + val;
+        }
+
+        if (incomeRange) {
+            incomeRange.addEventListener('input', () => {
+                incomeDisplay.innerHTML = formatIncome(+incomeRange.value) + '<span>Annual Household Income</span>';
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  TOAST
+        // ═══════════════════════════════════════
+        function showToast(msg, icon = 'fa-circle-check', color = 'var(--cyan)') {
+            const stack = document.getElementById('toastStack');
+            if (!stack) return;
+            const t = document.createElement('div');
+            t.className = 'toast-item';
+            t.innerHTML = `<i class="fa-solid ${icon}" style="color:${color}"></i> ${msg}`;
+            stack.appendChild(t);
+            requestAnimationFrame(() => { t.classList.add('show'); });
+            setTimeout(() => {
+                t.classList.remove('show');
+                setTimeout(() => t.remove(), 400);
+            }, 3000);
+        }
+
+        // ═══════════════════════════════════════
+        //  ANIMATED COUNTER
+        // ═══════════════════════════════════════
+        function animateCounter(el, target, prefix = '', suffix = '', duration = 1200) {
+            let start = 0;
+            const step = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += step;
+                if (start >= target) { start = target; clearInterval(timer); }
+                el.textContent = prefix + Math.floor(start).toLocaleString('en-IN') + suffix;
+            }, 16);
+        }
+
+        // ═══════════════════════════════════════
+        //  SCHEMES DATABASE
+        // ═══════════════════════════════════════
+        const SCHEMES = [
+            {
+                id: 1,
+                name: "Pradhan Mantri Jan Dhan Yojana (PMJDY)",
+                ministry: "Ministry of Finance",
+                desc: "Universal banking access with zero-balance accounts, RuPay debit card, and up to \u20b92 lakh accident insurance for unbanked citizens.",
+                icon: "fa-landmark", iconClass: "icon-blue",
+                tags: [{ label: "Banking", cls: "tag-cyan" }, { label: "Insurance", cls: "tag-purple" }, { label: "All Citizens", cls: "tag-green" }],
+                benefit: "\u20b910,000 overdraft + \u20b92L insurance",
+                url: "https://pmjdy.gov.in",
+                check: (d) => {
+                    let score = 60;
+                    if (d.income <= 200000) score += 25;
+                    if (['sc', 'st', 'obc', 'ews'].includes(d.category)) score += 10;
+                    if (d.rationCard && d.rationCard !== 'none') score += 5;
+                    return Math.min(score, 98);
+                }
+            },
+            {
+                id: 2,
+                name: "PM-KISAN Samman Nidhi",
+                ministry: "Ministry of Agriculture",
+                desc: "Direct income support of \u20b96,000 per year in three equal instalments for small and marginal farmer families.",
+                icon: "fa-seedling", iconClass: "icon-green",
+                tags: [{ label: "Farmers", cls: "tag-green" }, { label: "Direct Benefit", cls: "tag-cyan" }],
+                benefit: "\u20b96,000/year",
+                url: "https://pmkisan.gov.in",
+                check: (d) => {
+                    let score = 0;
+                    if (d.occupation === 'farmer') score = 92;
+                    else if (d.income <= 100000) score = 25;
+                    if (d.rationCard === 'bpl' || d.rationCard === 'aay') score += 5;
+                    return Math.min(score, 97);
+                }
+            },
+            {
+                id: 3,
+                name: "Pradhan Mantri Awas Yojana (PMAY)",
+                ministry: "Ministry of Housing & Urban Affairs",
+                desc: "Credit-linked subsidy on home loans up to \u20b92.67 lakh for EWS/LIG beneficiaries seeking first-time housing.",
+                icon: "fa-house", iconClass: "icon-purple",
+                tags: [{ label: "Housing", cls: "tag-purple" }, { label: "Subsidy", cls: "tag-cyan" }, { label: "EWS / LIG", cls: "tag-pink" }],
+                benefit: "Up to \u20b92.67 Lakh subsidy",
+                url: "https://pmaymis.gov.in",
+                check: (d) => {
+                    let score = 0;
+                    if (d.income <= 600000) score = 70;
+                    if (d.income <= 300000) score += 20;
+                    if (['sc', 'st', 'ews'].includes(d.category)) score += 10;
+                    if (['female', 'transgender'].includes(d.gender) && d.maritalStatus === 'widowed') score += 8;
+                    return Math.min(score, 96);
+                }
+            },
+            {
+                id: 4,
+                name: "Ayushman Bharat \u2013 PM-JAY",
+                ministry: "Ministry of Health & Family Welfare",
+                desc: "Health cover of \u20b95 lakh per family per year for secondary and tertiary hospitalisation at empanelled hospitals.",
+                icon: "fa-heart-pulse", iconClass: "icon-pink",
+                tags: [{ label: "Health", cls: "tag-pink" }, { label: "\u20b95 Lakh Cover", cls: "tag-cyan" }, { label: "BPL Priority", cls: "tag-purple" }],
+                benefit: "\u20b95 Lakh health cover/year",
+                url: "https://pmjay.gov.in",
+                check: (d) => {
+                    let score = 0;
+                    if (d.rationCard === 'bpl' || d.rationCard === 'aay') score = 90;
+                    else if (d.income <= 200000) score = 70;
+                    if (['sc', 'st'].includes(d.category)) score += 8;
+                    if (d.disability && d.disability !== 'none') score += 10;
+                    return Math.min(score, 99);
+                }
+            },
+            {
+                id: 5,
+                name: "PM Scholarship Scheme (PMSS)",
+                ministry: "Ministry of Education",
+                desc: "Scholarships for wards of ex-servicemen and children of state police officials for professional degree courses.",
+                icon: "fa-graduation-cap", iconClass: "icon-cyan",
+                tags: [{ label: "Education", cls: "tag-cyan" }, { label: "Students", cls: "tag-green" }],
+                benefit: "\u20b92,500\u2013\u20b93,000/month",
+                url: "https://ksb.gov.in/pmss.htm",
+                check: (d) => {
+                    let score = 0;
+                    if (d.occupation === 'student') score = 65;
+                    const a = +d.age;
+                    if (a >= 17 && a <= 25) score += 20;
+                    if (['sc', 'st', 'obc'].includes(d.category)) score += 10;
+                    if (d.income <= 600000) score += 10;
+                    return Math.min(score, 93);
+                }
+            },
+            {
+                id: 6,
+                name: "Sukanya Samriddhi Yojana (SSY)",
+                ministry: "Ministry of Finance",
+                desc: "High-interest savings scheme for the girl child (up to 2 daughters) with tax-free returns and partial withdrawal for education.",
+                icon: "fa-child-reaching", iconClass: "icon-purple",
+                tags: [{ label: "Girl Child", cls: "tag-pink" }, { label: "Savings", cls: "tag-cyan" }, { label: "Tax Benefit", cls: "tag-green" }],
+                benefit: "8.2% p.a. interest (tax-free)",
+                url: "https://www.india.gov.in/sukanya-samriddhi-account",
+                check: (d) => {
+                    let score = 0;
+                    if (d.gender === 'female') { const a = +d.age; if (a >= 1 && a <= 10) score = 95; else if (a <= 25) score = 40; }
+                    if (d.maritalStatus === 'married' && d.gender === 'male') score = 55;
+                    if (d.income <= 800000) score += 5;
+                    return Math.min(score, 97);
+                }
+            },
+            {
+                id: 7,
+                name: "PM Vishwakarma Yojana",
+                ministry: "Ministry of MSME",
+                desc: "Recognition, skill training, credit support (up to \u20b93 lakh at 5% interest) and market linkage for traditional artisans and craftspeople.",
+                icon: "fa-hammer", iconClass: "icon-blue",
+                tags: [{ label: "Artisans", cls: "tag-purple" }, { label: "Skill Dev", cls: "tag-cyan" }, { label: "Credit", cls: "tag-green" }],
+                benefit: "\u20b93 Lakh loan @ 5%",
+                url: "https://pmvishwakarma.gov.in",
+                check: (d) => {
+                    let score = 0;
+                    if (['self-employed', 'daily-wage'].includes(d.occupation)) score = 72;
+                    if (d.income <= 300000) score += 15;
+                    if (['sc', 'st', 'obc'].includes(d.category)) score += 8;
+                    return Math.min(score, 95);
+                }
+            },
+            {
+                id: 8,
+                name: "Stand-Up India Scheme",
+                ministry: "Ministry of Finance (SIDBI)",
+                desc: "Loans between \u20b910 lakh and \u20b91 crore for SC/ST entrepreneurs and women setting up a greenfield enterprise in any sector.",
+                icon: "fa-rocket", iconClass: "icon-cyan",
+                tags: [{ label: "Entrepreneurship", cls: "tag-cyan" }, { label: "SC / ST", cls: "tag-purple" }, { label: "Women", cls: "tag-pink" }],
+                benefit: "\u20b910L \u2013 \u20b91 Crore loan",
+                url: "https://www.standupmitra.in",
+                check: (d) => {
+                    let score = 0;
+                    if (['sc', 'st'].includes(d.category)) score = 70;
+                    if (d.gender === 'female') score = Math.max(score, 65);
+                    if (['self-employed', 'unemployed'].includes(d.occupation)) score += 15;
+                    const a = +d.age;
+                    if (a >= 18 && a <= 50) score += 10;
+                    return Math.min(score, 94);
+                }
+            },
+            {
+                id: 9,
+                name: "Divyangjan Scholarship Scheme",
+                ministry: "Dept. of Empowerment of Persons with Disabilities",
+                desc: "Pre-matric, post-matric and top-class scholarships for students with benchmark disabilities to support education.",
+                icon: "fa-hands-helping", iconClass: "icon-green",
+                tags: [{ label: "Disability", cls: "tag-purple" }, { label: "Education", cls: "tag-cyan" }, { label: "Scholarship", cls: "tag-green" }],
+                benefit: "\u20b95,500\u2013\u20b920,000/year",
+                url: "https://disabilityaffairs.gov.in",
+                check: (d) => {
+                    let score = 0;
+                    if (d.disability && d.disability !== 'none') score = 88;
+                    if (d.occupation === 'student') score += 10;
+                    if (d.income <= 250000) score += 8;
+                    return Math.min(score, 98);
+                }
+            },
+            {
+                id: 10,
+                name: "Pradhan Mantri Mudra Yojana (PMMY)",
+                ministry: "Ministry of Finance",
+                desc: "Collateral-free loans under Shishu (up to \u20b950,000), Kishore (up to \u20b95 lakh), and Tarun (up to \u20b910 lakh) for non-farm micro enterprises.",
+                icon: "fa-store", iconClass: "icon-blue",
+                tags: [{ label: "Micro Enterprise", cls: "tag-cyan" }, { label: "Collateral-Free", cls: "tag-green" }, { label: "MSME", cls: "tag-purple" }],
+                benefit: "Up to \u20b910 Lakh loan",
+                url: "https://www.mudra.org.in",
+                check: (d) => {
+                    let score = 0;
+                    if (d.occupation === 'self-employed') score = 80;
+                    if (d.income <= 500000) score += 12;
+                    if (['sc', 'st', 'obc', 'ews'].includes(d.category)) score += 8;
+                    return Math.min(score, 95);
+                }
+            },
+            {
+                id: 11,
+                name: "National Social Assistance Programme (NSAP)",
+                ministry: "Ministry of Rural Development",
+                desc: "Old age pension, widow pension, and disability pension for BPL households \u2014 monthly cash transfer directly to beneficiaries.",
+                icon: "fa-person-cane", iconClass: "icon-purple",
+                tags: [{ label: "Pension", cls: "tag-purple" }, { label: "BPL", cls: "tag-pink" }, { label: "Elderly", cls: "tag-cyan" }],
+                benefit: "\u20b9200\u2013\u20b9500/month",
+                url: "https://nsap.nic.in",
+                check: (d) => {
+                    let score = 0;
+                    const a = +d.age;
+                    if (a >= 60) score = 60;
+                    if (d.rationCard === 'bpl' || d.rationCard === 'aay') score += 25;
+                    if (d.maritalStatus === 'widowed') score += 15;
+                    if (d.disability && d.disability !== 'none') score += 10;
+                    return Math.min(score, 96);
+                }
+            },
+            {
+                id: 12,
+                name: "Beti Bachao Beti Padhao",
+                ministry: "Ministry of Women & Child Development",
+                desc: "Targeted campaign ensuring survival, protection, and education of the girl child with district-level interventions and incentives.",
+                icon: "fa-venus", iconClass: "icon-pink",
+                tags: [{ label: "Girl Child", cls: "tag-pink" }, { label: "Education", cls: "tag-cyan" }, { label: "Empowerment", cls: "tag-purple" }],
+                benefit: "Linked benefits & incentives",
+                url: "https://wcd.nic.in/bbbp-schemes",
+                check: (d) => {
+                    let score = 0;
+                    if (d.gender === 'female') { const a = +d.age; score = a <= 18 ? 85 : 45; }
+                    if (d.maritalStatus === 'married' && d.gender === 'male') score = 50;
+                    if (['sc', 'st'].includes(d.category)) score += 8;
+                    return Math.min(score, 92);
+                }
+            },
+        ];
+
+        // ═══════════════════════════════════════
+        //  GLOBAL STATE
+        // ═══════════════════════════════════════
+        let allResults = [];
+
+        // ═══════════════════════════════════════
+        //  LOADER  (global)
+        // ═══════════════════════════════════════
+        function showLoader(data) {
+            const overlay = document.getElementById('loadingOverlay');
+            const fill = document.getElementById('loaderBarFill');
+            const loaderText = document.getElementById('loaderText');
+            const msgs = [
+                'Cross-referencing citizen profile\u2026',
+                'Scanning 12 central schemes\u2026',
+                'Checking eligibility criteria\u2026',
+                'Calculating match scores\u2026',
+                'Compiling your results\u2026',
+            ];
+            overlay.classList.add('active');
+            let pct = 0;
+            let msgIdx = 0;
+            loaderText.textContent = msgs[0];
+
+            const interval = setInterval(() => {
+                pct += Math.random() * 18 + 4;
+                if (pct >= 100) pct = 100;
+                fill.style.width = pct + '%';
+                msgIdx = Math.min(Math.floor(pct / 22), msgs.length - 1);
+                loaderText.textContent = msgs[msgIdx];
+
+                if (pct >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                        showResults(data);
+                    }, 400);
+                }
+            }, 120);
+        }
+
+        // ═══════════════════════════════════════
+        //  SHOW RESULTS  (global)
+        // ═══════════════════════════════════════
+        function showResults(data) {
+            // Update step indicators
+            document.getElementById('step3').classList.add('active');
+            document.getElementById('line1').classList.add('completed');
+            document.getElementById('line2').classList.add('completed');
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step1').classList.add('completed');
+            document.getElementById('step1').querySelector('.step-dot').innerHTML = '<i class="fa-solid fa-check fa-xs"></i>';
+
+            // Compute eligibility scores
+            allResults = SCHEMES.map(s => ({ ...s, score: s.check(data) }))
+                .filter(s => s.score >= 30)
+                .sort((a, b) => b.score - a.score);
+
+            // Update header
+            document.getElementById('resultsTitle').textContent = `${data.name}, here are your results`;
+            document.getElementById('resultsMeta').textContent =
+                `Profile scanned \u00b7 ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} \u00b7 ${allResults.length} schemes matched`;
+
+            // Reset stat counters
+            document.getElementById('statMatched').textContent = '0';
+            document.getElementById('statTopScore').textContent = '0%';
+            document.getElementById('statBenefit').textContent = '\u20b90';
+
+            // Show sections
+            document.getElementById('resultsDivider').style.display = '';
+            const sect = document.getElementById('resultsSection');
+            sect.classList.add('visible');
+
+            // Render cards
+            renderSchemeCards(allResults);
+
+            // Scroll and animate counters
+            setTimeout(() => {
+                sect.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                AOS.refresh();
+
+                const topScore = allResults.length ? allResults[0].score : 0;
+                setTimeout(() => {
+                    animateCounter(document.getElementById('statMatched'), allResults.length);
+                    animateCounter(document.getElementById('statTopScore'), topScore, '', '%');
+                    const benefitEstimate = allResults.length * 15000;
+                    animateCounter(document.getElementById('statBenefit'), benefitEstimate, '\u20b9');
+                }, 600);
+            }, 100);
+
+            showToast(`${allResults.length} schemes found for your profile!`, 'fa-circle-check', '#00dc8c');
+        }
+
+        // ═══════════════════════════════════════
+        //  RENDER SCHEME CARDS  (global)
+        // ═══════════════════════════════════════
+        function renderSchemeCards(schemes) {
+            const grid = document.getElementById('schemeGrid');
+            const noRes = document.getElementById('noResults');
+
+            if (!schemes.length) {
+                grid.innerHTML = '';
+                noRes.classList.remove('d-none');
+                return;
+            }
+
+            noRes.classList.add('d-none');
+            grid.innerHTML = schemes.map((s, i) => {
+                const cls = s.score >= 80 ? 'high' : s.score >= 55 ? 'mid' : 'low';
+                const badge = s.score >= 80
+                    ? `<div class="scheme-badge badge-high"><i class="fa-solid fa-star me-1" style="font-size:0.5rem"></i>Top Match</div>`
+                    : s.score >= 55 ? `<div class="scheme-badge badge-mid">Eligible</div>` : '';
+                return `
+          <div class="col-md-6 col-xl-4" data-scheme-name="${s.name.toLowerCase()} ${s.ministry.toLowerCase()}">
+            <div class="scheme-card" data-aos="fade-up" data-aos-delay="${(i % 3) * 80}">
+              ${badge}
+              <div class="scheme-icon-wrap ${s.iconClass}"><i class="fa-solid ${s.icon}"></i></div>
+              <div class="scheme-ministry">${s.ministry}</div>
+              <div class="scheme-name">${s.name}</div>
+              <div class="scheme-desc">${s.desc}</div>
+              <div class="elig-label">
+                <span>Eligibility Match</span>
+                <span class="elig-pct ${cls}">${s.score}%</span>
+              </div>
+              <div class="elig-bar">
+                <div class="elig-bar-fill ${cls}" data-target="${s.score}"></div>
+              </div>
+              <div class="scheme-tags">${s.tags.map(t => `<span class="tag ${t.cls}">${t.label}</span>`).join('')}</div>
+              <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:1rem;font-family:'JetBrains Mono',monospace;">
+                <i class="fa-solid fa-indian-rupee-sign me-1" style="color:var(--cyan)"></i>${s.benefit}
+              </div>
+              <div class="scheme-actions">
+                <a href="${s.url}" target="_blank" rel="noopener" class="btn-scheme-primary">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Official Site
+                </a>
+                <button class="btn-scheme-secondary" onclick="copyScheme('${s.name.replace(/'/g, "\\'")}')">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>`;
+            }).join('');
+
+            // Animate eligibility bars
+            setTimeout(() => {
+                document.querySelectorAll('.elig-bar-fill').forEach(el => {
+                    el.style.width = el.dataset.target + '%';
+                });
+            }, 600);
+
+            AOS.refresh();
+        }
+
+        // ═══════════════════════════════════════
+        //  SEARCH / FILTER  (global — invoked by oninput)
+        // ═══════════════════════════════════════
+        function filterSchemes() {
+            const q = document.getElementById('schemeSearch').value.toLowerCase();
+            if (!q) { renderSchemeCards(allResults); return; }
+            const filtered = allResults.filter(s =>
+                s.name.toLowerCase().includes(q) ||
+                s.ministry.toLowerCase().includes(q) ||
+                s.desc.toLowerCase().includes(q)
+            );
+            renderSchemeCards(filtered);
+        }
+
+        // ═══════════════════════════════════════
+        //  COPY SCHEME NAME  (global — invoked by onclick)
+        // ═══════════════════════════════════════
+        function copyScheme(name) {
+            navigator.clipboard.writeText(name).then(() => {
+                showToast('Scheme name copied!', 'fa-copy', 'var(--purple-light)');
+            }).catch(() => {
+                showToast('Copy failed — please copy manually.', 'fa-triangle-exclamation', '#ff6b8a');
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  RESET FORM  (global — invoked by onclick)
+        // ═══════════════════════════════════════
+        function resetForm() {
+            const form = document.getElementById('eligibilityForm');
+            if (!form) return;
+            form.reset();
+            form.classList.remove('was-validated');
+
+            if (incomeRange) {
+                incomeRange.value = 200000;
+                incomeDisplay.innerHTML = '\u20b9 2,00,000<span>Annual Household Income</span>';
+            }
+
+            // Hide results section
+            const resultsSection = document.getElementById('resultsSection');
+            if (resultsSection) resultsSection.classList.remove('visible');
+            const resultsDivider = document.getElementById('resultsDivider');
+            if (resultsDivider) resultsDivider.style.display = 'none';
+
+            // Reset step indicators
+            document.getElementById('step3').classList.remove('active', 'completed');
+            document.getElementById('step1').classList.remove('completed');
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step1').querySelector('.step-dot').textContent = '01';
+            document.getElementById('line1').classList.remove('completed');
+            document.getElementById('line2').classList.remove('completed');
+
+            allResults = [];
+            const schemeSearch = document.getElementById('schemeSearch');
+            if (schemeSearch) schemeSearch.value = '';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                const formSection = document.getElementById('formSection');
+                if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+
+            showToast('Form cleared. Ready for new profile.', 'fa-rotate-left', 'var(--cyan)');
+        }
+
+        // ═══════════════════════════════════════
+        //  FORM SUBMIT
+        // ═══════════════════════════════════════
+        const eligibilityForm = document.getElementById('eligibilityForm');
+        if (eligibilityForm) {
+            eligibilityForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = e.target;
+
+                // Bootstrap validation
+                form.classList.add('was-validated');
+                if (!form.checkValidity()) {
+                    showToast('Please complete all required fields.', 'fa-triangle-exclamation', '#ff6b8a');
+                    gsap.from('.form-control:invalid, .form-select:invalid', {
+                        x: 6, duration: 0.06, repeat: 5, yoyo: true, ease: 'none'
+                    });
+                    return;
+                }
+
+                // Collect all form data — including age and contactNumber
+                const data = {
+                    name: document.getElementById('name').value.trim(),
+                    age: parseInt(document.getElementById('age').value, 10),
+                    gender: document.getElementById('gender').value,
+                    state: document.getElementById('state').value,
+                    occupation: document.getElementById('occupation').value,
+                    income: +incomeRange.value,
+                    category: document.getElementById('category').value,
+                    contactNumber: document.getElementById('contactNumber').value.trim()
+                };
+
+                console.log("Sending Data:", data);
+
+                // Disable button to prevent double submit
+                const submitBtn = document.getElementById('submitBtn');
+                if (submitBtn) submitBtn.disabled = true;
+
+                try {
+                    const response = await fetch("http://localhost:8081/api/check-eligibility", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            name: data.name,
+                            age: data.age,
+                            gender: data.gender,
+                            occupation: data.occupation,
+                            income: data.income,
+                            category: data.category,
+                            state: data.state,
+                            contactNumber: data.contactNumber
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Backend error ${response.status}: ${errorText}`);
+                    }
+
+                    const result = await response.json();
+                    console.log("Backend Response:", result);
+
+                    // Show animated loader then display results
+                    showLoader(data);
+
+                } catch (error) {
+                    console.error("Backend Error:", error);
+                    showToast(
+                        'Unable to connect to backend. Please ensure the Spring Boot API is running on port 8081.',
+                        'fa-triangle-exclamation',
+                        '#ff6b8a'
+                    );
+                } finally {
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  GSAP card hover tilt
+        // ═══════════════════════════════════════
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.scheme-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const dx = (e.clientX - cx) / (rect.width / 2);
+                const dy = (e.clientY - cy) / (rect.height / 2);
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 1.5) {
+                    gsap.to(card, {
+                        rotateX: -dy * 4,
+                        rotateY: dx * 4,
+                        duration: 0.4,
+                        ease: 'power2.out',
+                        transformPerspective: 800,
+                    });
+                } else {
+                    gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.6, ease: 'power2.out' });
+                }
+            });
+        });
+
+        // ═══════════════════════════════════════
+        //  Form field focus animations
+        // ═══════════════════════════════════════
+        document.querySelectorAll('.form-control, .form-select').forEach(el => {
+            el.addEventListener('focus', () => gsap.to(el, { scale: 1.008, duration: 0.2, ease: 'power2.out' }));
+            el.addEventListener('blur', () => gsap.to(el, { scale: 1, duration: 0.2, ease: 'power2.out' }));
+        });
+    </script>
+</body>
+
+</html>
